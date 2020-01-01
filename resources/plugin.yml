@@ -1,0 +1,18 @@
+name: LanguageAPI
+author: GalaxyLPS
+version: 0.0.1:ALPHA/CLOSED
+main: de.galaxymc.spigot.apis.languageapi.LanguageAPI
+database: false
+prefix: LanguageAPI
+website: https://github.com/GalaxyLPS/LanguageAPI
+description: Allows the user to change the language of the messages send by other plugins
+load: STARTUP
+
+commands:
+  lang:
+    description: Base command
+    usage: /lang [reload]
+    aliases:
+      - language
+      - langauge
+      - langs

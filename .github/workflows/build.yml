@@ -9,4 +9,4 @@ jobs:
 
     steps:
     - name: Compile
-    - run: javac $(find -name "*.java")
+    run: javac $(find -name "*.java")

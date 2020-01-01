@@ -1,0 +1,16 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: [ubuntu-latest]
+
+    steps:
+    - uses: actions/compile@v1
+    - name: Compile
+      run: |
+        find -name "*.java" > files.txt
+        javac @files.txt
+        rm files.txt

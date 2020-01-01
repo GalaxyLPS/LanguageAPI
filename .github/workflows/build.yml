@@ -9,7 +9,4 @@ jobs:
 
     steps:
     - name: Compile
-      run: |
-        find -name "*.java" > files.txt
-        javac @files.txt
-        rm files.txt
+    - run: javac $(find -name "*.java")

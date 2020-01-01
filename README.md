@@ -9,7 +9,7 @@ For other versions you have to try.
 
 ### Requirements
 A Minecraft Spigot server to install it on.
-or
+  or
 A project to use it with
 
 ## Using the API

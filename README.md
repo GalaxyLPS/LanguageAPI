@@ -9,13 +9,13 @@ For other versions you have to try.
 
 ### Requirements
 A Minecraft Spigot server to install it on.
-or
+  or
 A project to use it with
 
 ## Using the API
 As plugin copy the compiled jar into your plugins folder and restart or reload your server.
 
 As developer include the compiled jar in your project.
-Take a look at the wiki to get started!
+Take a look at the wiki to [get started](https://github.com/GalaxyLPS/LanguageAPI/wiki/getting-started/)!
 
 

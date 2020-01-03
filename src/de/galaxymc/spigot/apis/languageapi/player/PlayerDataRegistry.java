@@ -5,9 +5,8 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class PlayerDataContainer {
+public class PlayerDataRegistry {
 
     public List<PlayerData> playerData = new ArrayList<>();
 
@@ -16,8 +15,7 @@ public class PlayerDataContainer {
     }
 
     public PlayerData getPlayerData(Player p) {
-        Optional<PlayerData> maybe = playerData.stream().filter(data -> data.getPlayer() == p).findFirst();
-        return maybe.orElse(null);
+        return playerData.stream().filter(data -> data.getPlayer() == p).findFirst().orElse(null);
     }
 
 

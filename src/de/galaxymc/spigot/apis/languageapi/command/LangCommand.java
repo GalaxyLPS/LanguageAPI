@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 
 public class LangCommand implements CommandExecutor {
+
     @Override
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
         if (!(s instanceof Player)) {
@@ -18,66 +19,81 @@ public class LangCommand implements CommandExecutor {
             return true;
         }
         Player p = (Player) s;
-        if (args.length == 0) {
-            printHelp(p);
-        } else if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                if (!p.hasPermission("lang.admin")) {
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.command.noperm"));
+        switch (args.length) {
+            case 1:
+                switch (args[0].toLowerCase()) {
+                    case "reload":
+                        if (!p.hasPermission("lang.admin")) {
+                            p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.command.noperm"));
+                            return true;
+                        }
+                        try {
+                            LanguageAPI.getInstance().getConfigFile().load();
+                            LanguageAPI.getInstance().getLanguageRegistry().loadLanguages();
+                            Bukkit.getOnlinePlayers().forEach(player -> LanguageAPI.getInstance().getPlayerDataRegistry().getPlayerData(p).load());
+                            p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.command.noperm"));
+                            return true;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.failure"));
+                            return true;
+                        }
+                    case "change":
+                        if (LanguageAPI.getInstance().getSettings().isPermission() && !p.hasPermission("lang.change")) {
+                            p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.command.noperm"));
+                            return true;
+                        }
+                        p.openInventory(LanguageAPI.getInstance().getLanguageRegistry().createInventory(p));
+                        return true;
+                    case "stats":
+                        if (!p.hasPermission("lang.admin")) {
+                            p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.command.noperm"));
+                            return true;
+                        }
+                        p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.stats.header"));
+                        p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.stats.most") + LanguageAPI.getInstance().getLanguageRegistry().mostUsed().getId());
+                        p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.stats.footer"));
+                        return true;
+                    default:
+                        printHelp(p);
+                        return true;
+                }
+            case 2:
+                if ("reload".equals(args[0].toLowerCase())) {
+                    if (!p.hasPermission("lang.admin")) {
+                        p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.helpcommand.noperm"));
+                        return true;
+                    }
+                    switch (args[1].toLowerCase()) {
+                        case "config":
+                            LanguageAPI.getInstance().getConfigFile().load();
+                            p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.success"));
+                            return true;
+                        case "players":
+                            Bukkit.getOnlinePlayers().forEach(player -> LanguageAPI.getInstance().getPlayerDataRegistry().getPlayerData(p).load());
+                            p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.success"));
+                            return true;
+                        case "lang":
+                            try {
+                                LanguageAPI.getInstance().getLanguageRegistry().loadLanguages();
+                                p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.success"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                ;
+                                p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.failure"));
+                            }
+                            return true;
+                        default:
+                            printHelp(p);
+                    }
                     return true;
                 }
-                try {
-                    LanguageAPI.getInstance().getLanguageContainer().loadLanguages();
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.success"));
-                    return true;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.failure"));
-                    return true;
-                }
-            } else if (args[0].equalsIgnoreCase("change")) {
-                if (LanguageAPI.getInstance().getSettings().isPermission() && !p.hasPermission("lang.change")) {
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.command.noperm"));
-                    return true;
-                }
-                p.openInventory(LanguageAPI.getInstance().getLanguageContainer().createInventory(p));
-                return true;
-            } else if (args[0].equalsIgnoreCase("stats")) {
-                if (p.hasPermission("lang.admin")) {
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.stats.header"));
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.stats.most") + LanguageAPI.getInstance().getLanguageContainer().mostUsed().getId());
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.stats.footer"));
-                } else {
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.command.noperm"));
-                }
-            } else if (args[0].equalsIgnoreCase("help")) {
                 printHelp(p);
                 return true;
-            }
-        } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                if (!p.hasPermission("lang.admin")) {
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.command.noperm"));
-                    return true;
-                }
-                if (args[1].equalsIgnoreCase("config")) {
-                    LanguageAPI.getInstance().getConfigFile().load();
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.success"));
-                } else if (args[1].equalsIgnoreCase("players")) {
-                    Bukkit.getOnlinePlayers().forEach(player -> LanguageAPI.getInstance().getPlayerDataContainer().getPlayerData(p).load());
-                    p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.success"));
-                } else if (args[1].equalsIgnoreCase("lang")) {
-                    try {
-                        LanguageAPI.getInstance().getLanguageContainer().loadLanguages();
-                        p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.success"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        p.sendMessage(LanguageAPI.prefix() + Language.getString(p, "lang.admin.reload.failure"));
-                    }
-                }
-            }
+            default:
+                printHelp(p);
+                return true;
         }
-        return true;
     }
 
     public void printHelp(Player p) {

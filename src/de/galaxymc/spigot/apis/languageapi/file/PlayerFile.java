@@ -8,14 +8,12 @@ import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static de.galaxymc.spigot.apis.languageapi.data.Data.configFile;
 import static de.galaxymc.spigot.apis.languageapi.data.Data.playerFile;
 
-public class PlayerFile {
+public class PlayerFile extends ApiFile {
 
     public YamlConfiguration cfg;
 
@@ -28,9 +26,9 @@ public class PlayerFile {
     }
 
     public Language getLanguage(Player p) {
-        if (!isPlayerPresent(p)) return LanguageAPI.getInstance().getLanguageContainer().defaultLanguage();
+        if (!isPlayerPresent(p)) return LanguageAPI.getInstance().getLanguageRegistry().defaultLanguage();
         String id = cfg.getString(p.getUniqueId() + ".lang");
-        return LanguageAPI.getInstance().getLanguageContainer().getLanguageById(id);
+        return LanguageAPI.getInstance().getLanguageRegistry().getLanguageById(id);
     }
 
 
@@ -45,19 +43,11 @@ public class PlayerFile {
         save();
     }
 
-    private void save() {
-        try {
-            cfg.save(playerFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Map<Language, Integer> countLanguageUsage() {
         Map<Language, Integer> langs = new HashMap<>();
         Set<String> keys = cfg.getKeys(true);
         keys.stream().filter(key -> key.endsWith("lang")).forEach(key -> {
-            Language lang = LanguageAPI.getInstance().getLanguageContainer().getLanguageById(cfg.getString(key));
+            Language lang = LanguageAPI.getInstance().getLanguageRegistry().getLanguageById(cfg.getString(key));
             if (lang == null) return;
             langs.put(lang, langs.get(lang) + 1);
         });

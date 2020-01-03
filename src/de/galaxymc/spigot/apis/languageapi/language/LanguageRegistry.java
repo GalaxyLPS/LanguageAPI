@@ -16,11 +16,11 @@ import java.util.*;
 
 import static de.galaxymc.spigot.apis.languageapi.data.Data.languageDir;
 
-public class LanguageContainer {
+public class LanguageRegistry {
 
     private List<Language> languages;
 
-    public LanguageContainer() {
+    public LanguageRegistry() {
         this.languages = new ArrayList<>();
     }
 
@@ -37,24 +37,21 @@ public class LanguageContainer {
     }
 
     public Language getLanguageById(String id) {
-        Optional<Language> maybe = languages.stream().filter(lang -> lang.getId().equalsIgnoreCase(id)).findFirst();
-        return maybe.orElse(defaultLanguage());
+        return languages.stream().filter(lang -> lang.getId().equalsIgnoreCase(id)).findFirst().orElse(defaultLanguage());
     }
 
     public Language defaultLanguage() {
         String defaultId = LanguageAPI.getInstance().getSettings().getDefaultLang();
-        Optional<Language> maybe = languages.stream().filter(lang -> lang.getId().equalsIgnoreCase(defaultId)).findFirst();
-        return maybe.orElse(null);
+        return languages.stream().filter(lang -> lang.getId().equalsIgnoreCase(defaultId)).findFirst().orElse(null);
     }
 
     public Language defaultLanguage(Player p) {
         String local = ((CraftPlayer) p).getHandle().locale;
-        Optional<Language> language = languages.stream().filter(lang -> lang.getId().equalsIgnoreCase(local)).findFirst();
-        return language.orElse(defaultLanguage());
+        return languages.stream().filter(lang -> lang.getId().equalsIgnoreCase(local)).findFirst().orElse(defaultLanguage());
     }
 
     public Inventory createInventory(Player owner) {
-        int size = LanguageAPI.getInstance().getLanguageContainer().getLanguages().size();
+        int size = LanguageAPI.getInstance().getLanguageRegistry().getLanguages().size();
         int invSize;
         if (size <= 9) invSize = 9;
         else if (size <= 18) invSize = 18;
@@ -106,7 +103,7 @@ public class LanguageContainer {
         language.setMessages(Data.getDefaultStrings());
         File file = new File(languageDir + "/" + language.getId() + ".lang");
         file.createNewFile();
-        language.getFile().save();
+        language.getFile().saveLanguage();
         return file;
     }
 

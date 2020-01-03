@@ -2,13 +2,12 @@ package de.galaxymc.spigot.apis.languageapi.data;
 
 import de.galaxymc.spigot.apis.languageapi.LanguageAPI;
 import de.galaxymc.spigot.apis.languageapi.language.Language;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class PlayerData {
 
     Player player;
-    Language current = LanguageAPI.getInstance().getLanguageContainer().defaultLanguage();
+    Language current = LanguageAPI.getInstance().getLanguageRegistry().defaultLanguage();
 
     private PlayerData(Player player) {
         this.player = player;
@@ -38,10 +37,10 @@ public class PlayerData {
         PlayerData data = new PlayerData(p);
         data.load();
         if (data.getCurrent() == null) {
-            data.setCurrent(LanguageAPI.getInstance().getLanguageContainer().defaultLanguage(p));
+            data.setCurrent(LanguageAPI.getInstance().getLanguageRegistry().defaultLanguage(p));
             LanguageAPI.getInstance().getPlayerFile().setPlayerData(data);
         }
-        LanguageAPI.getInstance().getPlayerDataContainer().addPlayerData(data);
+        LanguageAPI.getInstance().getPlayerDataRegistry().addPlayerData(data);
         return data;
     }
 

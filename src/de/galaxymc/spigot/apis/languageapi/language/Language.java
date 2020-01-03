@@ -49,6 +49,6 @@ public class Language {
     }
 
     public static String getString(Player p, String messageId) {
-        return LanguageAPI.getInstance().getPlayerDataContainer().getPlayerData(p).getCurrent().getMessage(messageId); // TODO: nullpointer if no playerdata found
+        return LanguageAPI.getInstance().getPlayerDataRegistry().getPlayerData(p).getCurrent().getMessage(messageId); // TODO: nullpointer if no playerdata found
     }
 }

@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import static de.galaxymc.spigot.apis.languageapi.data.Data.configFile;
 
-public final class ConfigFile {
+public final class ConfigFile extends ApiFile {
 
     private YamlConfiguration cfg;
 
@@ -39,14 +39,6 @@ public final class ConfigFile {
         String defaultLang = cfg.getString("language.default");
         boolean permission = cfg.getBoolean("language.permission");
         return new PluginSettings(schemaVersion, autoUpdate, prefix, defaultLang, permission);
-    }
-
-    private void save() {
-        try {
-            cfg.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }

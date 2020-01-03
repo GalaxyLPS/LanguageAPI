@@ -4,10 +4,10 @@ import de.galaxymc.spigot.apis.languageapi.command.LangCommand;
 import de.galaxymc.spigot.apis.languageapi.data.PlayerData;
 import de.galaxymc.spigot.apis.languageapi.file.ConfigFile;
 import de.galaxymc.spigot.apis.languageapi.file.PlayerFile;
-import de.galaxymc.spigot.apis.languageapi.language.LanguageContainer;
+import de.galaxymc.spigot.apis.languageapi.language.LanguageRegistry;
 import de.galaxymc.spigot.apis.languageapi.listener.ClickListener;
 import de.galaxymc.spigot.apis.languageapi.listener.OnlineListener;
-import de.galaxymc.spigot.apis.languageapi.player.PlayerDataContainer;
+import de.galaxymc.spigot.apis.languageapi.player.PlayerDataRegistry;
 import de.galaxymc.spigot.apis.languageapi.settings.PluginSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,23 +20,23 @@ public final class LanguageAPI extends JavaPlugin {
 
     private PlayerFile playerFile;
     private ConfigFile configFile;
-    private LanguageContainer languageContainer;
+    private LanguageRegistry languageRegistry;
     private PluginSettings settings;
-    private PlayerDataContainer playerDataContainer;
+    private PlayerDataRegistry playerDataRegistry;
     private static LanguageAPI instance;
 
     @Override
     public void onEnable() {
         configFile = new ConfigFile();
         playerFile = new PlayerFile();
-        languageContainer = new LanguageContainer();
-        playerDataContainer = new PlayerDataContainer();
+        languageRegistry = new LanguageRegistry();
+        playerDataRegistry = new PlayerDataRegistry();
         try {
             configFile.init();
             playerFile.init();
-            languageContainer.init();
+            languageRegistry.init();
             settings = configFile.load();
-            languageContainer.getLanguages().forEach(lang -> lang.getFile().save());
+            languageRegistry.getLanguages().forEach(lang -> lang.getFile().saveLanguage());
         } catch (IOException e) {
             e.printStackTrace();
             this.setEnabled(false);
@@ -56,7 +56,7 @@ public final class LanguageAPI extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        playerDataContainer.playerData.forEach(PlayerData::save);
+        playerDataRegistry.playerData.forEach(PlayerData::save);
     }
 
     public static String prefix() {
@@ -71,16 +71,16 @@ public final class LanguageAPI extends JavaPlugin {
         return configFile;
     }
 
-    public LanguageContainer getLanguageContainer() {
-        return languageContainer;
+    public LanguageRegistry getLanguageRegistry() {
+        return languageRegistry;
     }
 
     public PluginSettings getSettings() {
         return settings;
     }
 
-    public PlayerDataContainer getPlayerDataContainer() {
-        return playerDataContainer;
+    public PlayerDataRegistry getPlayerDataRegistry() {
+        return playerDataRegistry;
     }
 
     public static LanguageAPI getInstance() {

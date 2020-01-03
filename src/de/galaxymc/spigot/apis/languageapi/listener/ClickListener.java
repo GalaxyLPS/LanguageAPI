@@ -17,9 +17,9 @@ public final class ClickListener implements Listener {
         if (e.getView().getTitle().equalsIgnoreCase(Data.getString("lang.inventory.name"))) {
             if (!(e.getWhoClicked() instanceof Player)) return;
             Player p = (Player) e.getWhoClicked();
-            PlayerData data = LanguageAPI.getInstance().getPlayerDataContainer().getPlayerData(p);
+            PlayerData data = LanguageAPI.getInstance().getPlayerDataRegistry().getPlayerData(p);
             ItemStack item = e.getCurrentItem();
-            Language language = LanguageAPI.getInstance().getLanguageContainer().getLanguageById(item.getItemMeta().getDisplayName());
+            Language language = LanguageAPI.getInstance().getLanguageRegistry().getLanguageById(item.getItemMeta().getDisplayName());
             data.setCurrent(language);
             data.save();
             p.closeInventory();

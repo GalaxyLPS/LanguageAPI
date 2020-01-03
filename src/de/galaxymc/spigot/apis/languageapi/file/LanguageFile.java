@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class LanguageFile {
+public class LanguageFile extends ApiFile {
 
     private final File file;
     private YamlConfiguration cfg;
@@ -41,28 +41,18 @@ public class LanguageFile {
         return m;
     }
 
-    public void save() {
+    public void saveLanguage() {
         cfg.options().copyDefaults(true);
         for (String s : Data.getDefaultStrings().keySet()) {
             cfg.addDefault(s, Data.getString(s));
         }
-        saveConfiguration();
+        save();
         for (String s : language.getMessages().keySet()) {
             String msg = language.getMessage(s);
             if (msg == null) continue;
             if (msg.startsWith("MemorySection")) continue;
             cfg.set(s, msg);
         }
-        saveConfiguration();
+        save();
     }
-
-    public void saveConfiguration() {
-        try {
-            cfg.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }
